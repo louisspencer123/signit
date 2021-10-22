@@ -14,10 +14,14 @@
 </section>
 <section class="navigation">
     <div class="container mx-auto">
-        <ul>
+        <ul class="navbar">
             <li><a href="/">Home</a></li>
-            <li><a href="/visitors">Visitors</a></li>
-            <li><a href="/visitors/create">Add visitor</a></li>
+            @if (Auth::guest())
+                <li><a href="/login">Login</a></li>
+            @else
+                <li><a href="/visitors">Visitors</a></li>
+                <li><a href="/visitors/create">Sign the guestbook</a></li>
+            @endif
         </ul>
     </div>
 </section>
