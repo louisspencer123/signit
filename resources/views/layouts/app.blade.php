@@ -18,9 +18,12 @@
             <li><a href="/">Home</a></li>
             @if (Auth::guest())
                 <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
             @else
                 <li><a href="/visitors">Visitors</a></li>
                 <li><a href="/visitors/create">Sign the guestbook</a></li>
+                <li><a href="/logout">Logout</a></li>
+
             @endif
         </ul>
     </div>

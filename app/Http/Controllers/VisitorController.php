@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VisitorController extends Controller
 {
@@ -39,16 +40,17 @@ class VisitorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-
         $request->validate([
-            'name' => 'required',
             'comments' => 'required'
         ]);
 
-        Visitor::create($request->all());
+        $visitor = new Visitor;
+        $visitor->user()->associate(Auth::user());
+        $visitor->comments = $request->comments;
+        $visitor->save();
 
         return redirect()->route('visitors.index')
-            ->with('success', 'Signing created successfully.');
+            ->with('success','Signing created successfully.');
     }
 
     /**
@@ -76,7 +78,7 @@ class VisitorController extends Controller
             'visitor' => $visitor
         ]);
 
-    }
+    } 
 
     /**
      * Update the specified resource in storage.
@@ -86,16 +88,22 @@ class VisitorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Visitor $visitor) {
-
         $request->validate([
-            'name' => 'required',
             'comments' => 'required'
         ]);
 
-        $visitor->update($request->all());
+        $user_id = Auth::id(); 
+
+        if ($user_id != $visitor->user->id){
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
+        $visitor->comments = $request->comments;
+        $visitor->save();
 
         return redirect()->route('visitors.index')
             ->with('success', 'Signing updated successfully');
+
     }
 
     /**

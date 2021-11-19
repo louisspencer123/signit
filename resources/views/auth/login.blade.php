@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Login')
 @section('content')
+    
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+    
     @if (Auth::guest())
         <form action="{{ route('authenticate') }}" method="POST">
             @csrf
