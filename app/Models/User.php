@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Visitor;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /** adding practical function from week 4 */
+    public function visitors()
+    {
+        return $this->hasMany(Visitor::class);
+    }
 
     /**
      * The attributes that are mass assignable.
