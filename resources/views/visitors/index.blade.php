@@ -11,6 +11,18 @@
         <article>
             <h3><a href="{{ route('visitors.show', $visitor->id) }}">{{ $visitor->user->name }}</a></h3>
             <p>{{ $visitor->comments }}</p>
+            <p>Up votes: {{ $visitor->up_votes }}
+            <br>Down votes: {{ $visitor->down_votes }}</p>
+            
+            <form action="{{ route('visitors.upvote', $visitor->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn">Up Vote</button>
+            </form>
+            <form action="{{ route('visitors.downvote', $visitor->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn">Down Vote</a>
+            </form>
+
             @if (Auth::user() && Auth::user()->id === $visitor->user_id)
                 <form action="{{ route('visitors.destroy', $visitor->id) }}" method="POST">
                     <a class="btn btn-blue" href="{{ route('visitors.show', $visitor->id) }}">Show</a>
