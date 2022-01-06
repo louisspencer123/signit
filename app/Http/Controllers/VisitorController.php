@@ -15,8 +15,9 @@ class VisitorController extends Controller
      */
     public function index() {
 
-        $visitors = Visitor::orderBy('created_at', 'desc')
-            ->paginate(20);
+        $visitors = Visitor::withVotes()
+        ->orderBy('created_at', 'desc')
+        ->paginate(20);
 
         return view('visitors/index', [
             'visitors' => $visitors
@@ -118,4 +119,49 @@ class VisitorController extends Controller
         return redirect()->route('visitors.index')
             ->with('success', 'Signing deleted successfully');
     }
+
+    //methods relating to new vote functionality
+
+    protected function _voteExists($voteData) {
+        return Vote::where([
+            'visitor_id' => $voteData['visitor_id'],
+            'user_id' => $voteData['user_id']
+            ])->exists();
+    }
+        
+        
+    public function upVote(Visitor $visitor) {
+        if ($this->_voteExists([
+            'visitor_id' => $visitor->id,
+            'user_id' => Auth::user()->id
+            ])) {
+                return redirect()->route('visitors.index')
+                ->with('success', 'You have already voted for this visitor.');
+            }
+        
+        $visitor->addUpVote(Auth::user());
+            
+        return redirect()->route('visitors.index')
+        ->with('success', 'Visitor up voted');
+    }
+        
+        
+        
+    public function downVote(Visitor $visitor) {
+        if ($this->_voteExists([
+            'visitor_id' => $visitor->id,
+            'user_id' => Auth::user()->id
+            ])) {
+                return redirect()->route('visitors.index')
+                ->with('success', 'You have already voted for this visitor.');
+        }
+            
+        $visitor->addDownVote(Auth::user());
+
+        return redirect()->route('visitors.index')
+        ->with('success', 'Visitor down voted');
+        
+    }
+        
+        
 }

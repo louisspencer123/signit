@@ -31,6 +31,8 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('authentic
 
 /* Resource Routes for Visitor CRUD operations*/
 Route::resource('/visitors', VisitorController::class);
+Route::post('/visitors/{visitor}/up-vote', [VisitorController::class, 'upVote'])->name('visitors.upvote')->middleware('auth');
+Route::post('/visitors/{visitor}/down-vote', [VisitorController::class, 'downVote']) ->name('visitors.downvote')->middleware('auth');
 
 /* Logout Route*/
 Route::get('/logout', [LoginController::class, 'logout']);
